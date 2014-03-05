@@ -1,10 +1,12 @@
 package com.vinilearning.eventmanager.start;
 
-import com.vinilearning.eventmanager.R;
-
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+
+import com.vinilearning.eventmanager.MainActivity;
+import com.vinilearning.eventmanager.R;
 
 public class SplashScreen extends Activity {
 	@Override
@@ -24,6 +26,8 @@ public class SplashScreen extends Activity {
 	}
 
 	private void loadData() {
-		
+		Intent intent = new Intent(this, MainActivity.class);
+		startActivity(intent);
+		finish();
 	}
 }
