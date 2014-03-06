@@ -1,6 +1,5 @@
 package com.vinilearning.eventmanager;
 
-import android.app.SearchManager;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -13,14 +12,15 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.vinilearning.eventmanager.fragment.AddNewEventFragment;
 import com.vinilearning.eventmanager.fragment.FragmentFactory;
 import com.vinilearning.eventmanager.fragment.PlanetFragment;
+import com.vinilearning.eventmanager.utility.DialogUtils;
 
 public class MainActivity extends SherlockFragmentActivity {
 	public static DrawerLayout mDrawerLayout;
@@ -31,6 +31,8 @@ public class MainActivity extends SherlockFragmentActivity {
 	private CharSequence mTitle;
 	private String[] mPlanetTitles;
 	private FragmentFactory mFragmentFactory;
+	private Fragment currentFragment;
+	private boolean isShowMenu = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -65,12 +67,14 @@ public class MainActivity extends SherlockFragmentActivity {
 		R.string.drawer_close /* "close drawer" description for accessibility */
 		) {
 			public void onDrawerClosed(View view) {
+				isShowMenu = false;
 				getSupportActionBar().setTitle(mTitle);
 				supportInvalidateOptionsMenu();// creates call to
 												// onPrepareOptionsMenu()
 			}
 
 			public void onDrawerOpened(View drawerView) {
+				isShowMenu = true;
 				getSupportActionBar().setTitle(mDrawerTitle);
 				supportInvalidateOptionsMenu(); // creates call to
 				// onPrepareOptionsMenu()
@@ -79,7 +83,7 @@ public class MainActivity extends SherlockFragmentActivity {
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 
 		if (savedInstanceState == null) {
-			selectItem(0);
+			// selectItem(0);
 		}
 	}
 
@@ -108,17 +112,7 @@ public class MainActivity extends SherlockFragmentActivity {
 		// Handle action buttons
 		switch (item.getItemId()) {
 		case R.id.action_add_new:
-			// create intent to perform web search for this planet
-			Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
-			intent.putExtra(SearchManager.QUERY, getSupportActionBar()
-					.getTitle());
-			// catch event that there's no activity to handle intent
-			if (intent.resolveActivity(getPackageManager()) != null) {
-				startActivity(intent);
-			} else {
-				Toast.makeText(this, R.string.app_not_available,
-						Toast.LENGTH_LONG).show();
-			}
+			gotoAddNew();
 			return true;
 		case android.R.id.home:
 			if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
@@ -133,6 +127,16 @@ public class MainActivity extends SherlockFragmentActivity {
 		}
 	}
 
+	private void gotoAddNew() {
+		// update the main content by replacing fragments
+		currentFragment = new AddNewEventFragment();
+
+		FragmentManager fragmentManager = getSupportFragmentManager();
+		fragmentManager.beginTransaction()
+				.replace(R.id.content_frame, currentFragment).commit();
+		MainActivity.mDrawerLayout.closeDrawer(MainActivity.mDrawerList);
+	}
+
 	/* The click listner for ListView in the navigation drawer */
 	private class DrawerItemClickListener implements
 			ListView.OnItemClickListener {
@@ -144,6 +148,28 @@ public class MainActivity extends SherlockFragmentActivity {
 	}
 
 	private void selectItem(int position) {
+
+		switch (position) {
+		case 0:
+			DialogUtils.getInstance(MainActivity.this).showDialogAbout();
+			break;
+
+		case 1:
+
+			break;
+
+		case 2:
+
+			break;
+
+		case 3:
+
+			break;
+
+		default:
+			break;
+		}
+
 		// update the main content by replacing fragments
 		Fragment fragment = new PlanetFragment();
 		Bundle args = new Bundle();
@@ -158,6 +184,22 @@ public class MainActivity extends SherlockFragmentActivity {
 		mDrawerList.setItemChecked(position, true);
 		setTitle(mPlanetTitles[position]);
 		mDrawerLayout.closeDrawer(mDrawerList);
+	}
+
+	@Override
+	public void onBackPressed() {
+		if (currentFragment instanceof AddNewEventFragment) {
+			Intent intent = new Intent(this, MainActivity.class);
+			startActivity(intent);
+			finish();
+		} else {
+
+			if (isShowMenu) {
+				DialogUtils.getInstance(this).showDialogAbout();
+			}
+
+			super.onBackPressed();
+		}
 	}
 
 	@Override
@@ -185,4 +227,9 @@ public class MainActivity extends SherlockFragmentActivity {
 		mDrawerToggle.onConfigurationChanged(newConfig);
 	}
 
+	@Override
+	protected void onDestroy() {
+		DialogUtils.destroy();
+		super.onDestroy();
+	}
 }

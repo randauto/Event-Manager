@@ -47,9 +47,22 @@ public class FragmentFactory extends SherlockFragmentActivity {
 
 			break;
 
+		case ADD_NEW:
+			gotoAddNew();
+			break;
 		default:
 			break;
 		}
+	}
+
+	private void gotoAddNew() {
+		// update the main content by replacing fragments
+		AddNewEventFragment fragment = new AddNewEventFragment();
+
+		FragmentManager fragmentManager = getSupportFragmentManager();
+		fragmentManager.beginTransaction()
+				.replace(R.id.content_frame, fragment).commit();
+		MainActivity.mDrawerLayout.closeDrawer(MainActivity.mDrawerList);
 	}
 
 	private void gotoMain() {
