@@ -1,5 +1,6 @@
 package com.vinilearning.eventmanager.fragment;
 
+import android.content.Context;
 import android.support.v4.app.FragmentManager;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -9,16 +10,18 @@ import com.vinilearning.eventmanager.common.AppConstants.AppFunction;
 
 public class FragmentFactory extends SherlockFragmentActivity {
 	private static FragmentFactory instance;
+	private Context context;
 
-	public FragmentFactory getInstance() {
+	public static FragmentFactory getInstance(Context context) {
 
 		if (instance == null) {
-			instance = new FragmentFactory();
+			instance = new FragmentFactory(context);
 		}
 		return instance;
 	}
 
-	private FragmentFactory() {
+	private FragmentFactory(Context context) {
+		this.context = context;
 	}
 
 	public void selectItem(AppFunction mItem) {
