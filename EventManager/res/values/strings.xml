@@ -28,6 +28,15 @@
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="action_add_new">Add new event</string>
+    <string name="action_search">Search Event</string>
     <string name="app_not_available">Sorry, there\'s no web browser available</string>
+
+    <!-- Screen Add New Event -->
+    <string name="ev_title">Event Title:</string>
+    <string name="ev_time">Event Time:</string>
+    <string name="ev_location">Location:</string>
+    <string name="ev_notes">Notes:</string>
+    <string name="btnTagFriends">Tag Friends</string>
+    <string name="btnAddImages">Add Images</string>
 
 </resources>
